@@ -22,6 +22,24 @@ contract InterestRate is Ownable{
         return BorrowIntRate;
     }
 
+    function getCurrentLendRateInSec() view public returns(uint){
+        return (LendIntRate * 10e9) / (3 * 30 * 24 * 60 * 60); 
+    }
+
+    function getCurrentBorrowRateInSec() view public returns(uint){
+        return (BorrowIntRate * 10e9) / (3 * 30 * 24 * 60 * 60); 
+    }
+
+    function getLendInterestAmount(uint initalTimeStamp, uint256 lendAmount,uint currentTimeStamp) view public returns(uint256){
+        uint256 amount = getCurrentLendRateInSec() * (currentTimeStamp - initalTimeStamp) * lendAmount;
+        return amount / 100;
+    }
+
+    function getLoanInterestAmount(uint initalTimeStamp, uint256 borrowedAmount,uint currentTimeStamp) view public returns(uint256){
+        uint256 amount = getCurrentBorrRateInSec() * (currentTimeStamp - initalTimeStamp) * borrowedAmount;
+        return amount / 100;
+    }
+
     function changeCurrentLendRate(uint newRate) external onlyOwner{
         uint oldRate = getCurrentLendRate();
         LendIntRate = newRate;
